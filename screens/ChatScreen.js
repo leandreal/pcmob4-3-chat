@@ -1,12 +1,25 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { useEffect } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { GiftedChat } from "react-native-gifted-chat";
 import firebase from "../database/firebaseDB";
 
 const auth = firebase.auth();
 
+const demoMessage = {
+  _id: 1,
+  text: "Hello there!",
+  createdAt: new Date(),
+  user: {
+    _id: 2,
+    name: "Demo person",
+    avatar: "https://placeimg.com/140/140/any",
+  },
+};
+
 export default function ChatScreen() {
+  const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -22,11 +35,20 @@ export default function ChatScreen() {
         </TouchableOpacity>
       ),
     });
+
+    setMessages([demoMessage]);
   }, []);
 
   const logout = () => auth.signOut();
 
-  return <View></View>;
+  return (
+    <GiftedChat
+      messages={messages}
+      listViewProps={{ style: { backgroundColor: "teal" } }}
+      user={{ _id: 1 }}
+    />
+  );
 }
 
 const styles = StyleSheet.create({});
+
