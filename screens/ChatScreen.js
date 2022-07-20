@@ -5,7 +5,6 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { GiftedChat } from "react-native-gifted-chat";
 import firebase from "../database/firebaseDB";
-
 const auth = firebase.auth();
 const db = firebase.firestore().collection("messages");
 
@@ -15,15 +14,15 @@ export default function ChatScreen() {
 
   useEffect(() => {
     const unsubscribe = db
-    .orderBy("createdAt", "desc")
-    .onSnapshot((collectionSnapshot) => {
+      .orderBy("createdAt", "desc")
+      .onSnapshot((collectionSnapshot) => {
         const messages = collectionSnapshot.docs.map((doc) => {
-            const date = doc.data().createdAt.toDate();
-            const newDoc = { ...doc.data(), createdAt: date };
-            return newDoc;
+          const date = doc.data().createdAt.toDate();
+          const newDoc = { ...doc.data(), createdAt: date };
+          return newDoc;
         });
         setMessages(messages);
-    });
+      });
 
     auth.onAuthStateChanged((user) => {
       if (user) navigation.navigate("Chat", { id: user.id, email: user.email });
@@ -38,7 +37,6 @@ export default function ChatScreen() {
       ),
     });
     return unsubscribe;
-
   }, []);
 
   const logout = () => auth.signOut();
@@ -52,11 +50,10 @@ export default function ChatScreen() {
     <GiftedChat
       messages={messages}
       onSend={sendMessages}
-      listViewProps={{ style: { backgroundColor: "#666" } }}
+      listViewProps={{ style: { backgroundColor: "grey" } }}
       user={{ _id: auth.currentUser?.uid, name: auth.currentUser?.email }}
     />
   );
 }
 
 const styles = StyleSheet.create({});
-
